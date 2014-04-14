@@ -4,11 +4,26 @@ import sys
 import csv
 import db_options as eo
 import os
+import subprocess
 
 query_path = os.getcwd()+'/'
 save_path = os.getcwd()+'/'
 
 (options, args) = eo.argsOptions()
+if options.edit:
+    config_path = os.path.dirname(os.path.realpath(__file__)) + '/db_config.py'
+    try: subprocess.call(['vi', config_path])
+    except: 
+        print('!!! Requires vi to edit default options using this options\n alternately you can open '+config_path+' manually and edit it using an editor of your choice.')
+        sys.exit()
+    options.info = True 
+    print('Editing: '+config_path)
+
+if options.info: 
+    reload(eo)
+    eo.printDefaults()
+    sys.exit()
+
 #######################################
 #### does this only if path is set, which likely will happen only during master.py
 if options.path != '':
@@ -51,17 +66,17 @@ else:
     print('If this query has output, it will save to: '+'\n'+csvfile+'\n')
     try:
         records=cursor.fetchall()
-        # If raw is True then don't print header
-        if not options.raw:
+        # If title is empty string then don't print header
+        if not options.title=='':
             header = [desc[0] for desc in cursor.description]
             header = ','.join(header)
-            # if title option given then set to header
+            # if title option given (and not empty) then set to header
             if options.title!='none': header=options.title
             print('Succeeded. Output written with header:')
             print(header)
             with open(csvfile, "w") as output:
                 output.write(header+'\n')
-        else: print('Succeeded. Output set to raw, so header is suppressed \n')
+        else: print('Succeeded. Title is empty, so header is suppressed \n')
         with open(csvfile, "a") as output:
             writer = csv.writer(output, lineterminator='\n')
             writer.writerows(records)
