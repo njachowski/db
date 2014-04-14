@@ -27,5 +27,5 @@ def getConnection(abbreviation):
 
 def printDefaults():
 	reload(db_config)
-	print('\nDefault out file: '+db_config.DEFAULT_OUT_FILE)
-	print('Default database: '+db_config.DEFAULT_DATABASE+'\n')
+	print('\nDefault database: '+db_config.DEFAULT_DATABASE)
+	print('Default out file: '+db_config.DEFAULT_OUT_FILE+'\n')

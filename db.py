@@ -20,7 +20,7 @@ if options.edit:
     print('Editing: '+config_path)
 
 if options.info: 
-    reload(eo)
+    #reload(eo)
     eo.printDefaults()
     sys.exit()
 
